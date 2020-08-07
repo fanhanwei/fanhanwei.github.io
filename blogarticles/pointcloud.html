@@ -56,22 +56,20 @@
 									<strong>点云的用途：</strong>三维重建、测绘、自动驾驶等。<br />
 									<hr />
 								
-									<h3>Definition</h3>
-									<dl>
-										<dt>Item 1</dt>
-										<dd>
-											<p>Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-										</dd>
-										<dt>Item 2</dt>
-										<dd>
-											<p>Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-										</dd>
-										<dt>Item 3</dt>
-										<dd>
-											<p>Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
-										</dd>
-									</dl>
-
+									
+								<!-- Text stuff -->
+									<h2>点云处理/h2>
+									<p><strong>点云处理的三个层次：</strong>Marr将图像处理分为三个层次，低层次包括图像强化，滤波，关键点/边缘检测等
+										基本操作。中层次包括连通域标记（label），图像分割等操作。高层次包括物体识别，场景分析等操作。
+										工程中的任务往往需要用到多个层次的图像处理手段。PCL官网对点云处理方法给出了较为明晰的层次划分，如图所示。<br />
+										<span class="image fit"><img src="blogimages/1.jpg" alt="" /></span>
+										此处的common指的是点云数据的类型，包括XYZ，XYZC，XYZN，XYZG等很多类型点云，归根结底，最重要的信息还是包含在pointpcl::point::xyz中。
+										可以看出，低层次的点云处理主要包括滤波（filters），关键点（keypoints）/边缘检测。点云的中层次处理则是特征描述（feature），分割（segmention）与分类。
+										高层次处理包括配准（registration），识别（recognition）。可见，点云在分割的难易程度上比图像处理更有优势，准确的分割也为识别打好了基础。</p>
+									<hr />
+									<p>引用自：https://blog.csdn.net/hongju_tang/article/details/85008888</p>
+									<hr />
+								
 								<!-- Preformatted Code -->
 									<h2>Preformatted</h2>
 									<pre><code>i = 0;
