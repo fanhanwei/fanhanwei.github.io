@@ -42,33 +42,27 @@
 						<!-- Post -->
 							<section class="post">
 								<header class="major">
-									<h1>Point Cloud</h1>
+									<h1>Iterative Closest Pointsd</h1>
 								</header>
-
-								<!-- Text stuff -->
-									<h2>点云概念</h2>
-									<p><strong>点云与三维图像的关系：</strong>三维图像是一种特殊的信息表达形式，其特征是表达的空间中三个维度的数据，表现形式包括：深度图（以灰度表达物体与相机的距离），几何模型（由CAD软件建立），点云模型（所有逆向工程设备都将物体采样成点云）。和二维图像相比，三维图像借助第三个维度的信息，可以实现天然的物体——背景解耦。点云数据是最为常见也是最基础的三维模型。点云模型往往由测量直接得到，每个点对应一个测量点，未经过其他处理手段，故包含了最大的信息量。这些信息隐藏在点云中需要以其他提取手段将其萃取出来，提取点云中信息的过程则为三维图像处理。<br />
-									<strong>点云的概念：</strong>点云是在同一空间参考系下表达目标空间分布和目标表面特性的海量点集合，在获取物体表面每个采样点的空间坐标后，得到的是点的集合，称之为“点云”（Point Cloud）。<br />
-									<strong>点云的获取设备：</strong>RGBD设备是获取点云的设备，比如PrimeSense公司的PrimeSensor、微软的Kinect、华硕的XTionPRO。现今主要是通过三维激光扫描仪进行数据采集获取点云数据，其次通过二维影像进行三维重建，在重建过程中获取点云数据，另外还有一些，通过三维模型来计算获取点云。<br />
-									<strong>点云的内容：</strong>根据激光测量原理得到的点云，包括三维坐标（XYZ）和激光反射强度（Intensity），强度信息与目标的表面材质、粗糙度、入射角方向，以及仪器的发射能量，激光波长有关。根据摄影测量原理得到的点云，包括三维坐标（XYZ）和颜色信息（RGB）。结合激光测量和摄影测量原理得到点云，包括三维坐标（XYZ）、激光反射强度（Intensity）和颜色信息（RGB）。<br />
-									<strong>点云的属性：</strong>空间分辨率、点位精度、表面法向量等。<br />
-									<strong>点云存储格式：</strong>*.pts; *.asc ; *.dat; .stl ; [1] .imw；.xyz；.las。LAS格式文件已成为LiDAR数据的工业标准格式，LAS文件按每条扫描线排列方式存放数据,包括激光点的三维坐标、多次回波信息、强度信息、扫描角度、分类信息、飞行航带信息、飞行姿态信息、项目信息、GPS信息、数据点颜色信息等。</p>
-									<strong>点云的用途：</strong>三维重建、测绘、自动驾驶等。<br />
-									<hr />
-								
-									<h3>Definition</h3>
 									<dl>
-										<dt>Item 1</dt>
+										<dt>配准</dt>
 										<dd>
-											<p>Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
+											<p>给定两个来自不同坐标系的三维数据点集，找到两个点集空间的变换关系，使得两个点集能统一到同一坐标系统中，即配准过程。<br />
+											对于从不同视图（views）获取的每一组点云数据，需要一个能够将它们对齐在一起的单一点云模型，从而可以应用后续处理步骤，如分割和对象重构。 </p>
 										</dd>
-										<dt>Item 2</dt>
+										<dt>配准模型</dt>
 										<dd>
-											<p>Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
+											<p>两个数据集的计算步骤：<br />1. 识别最能代表两个数据集中的场景的兴趣点（interest points）（即关键点 keypoints）<br />
+												2. 在每个关键点处，计算特征描述符;<br />
+												3. 从特征描述符集合以及它们在两个数据集中的x,y,z位置，基于特征和位置之间的相似性来估计对应关系;<br />
+												4. 假设数据被认为包含噪声的，并不是所有的对应关系都是有效的，所以舍弃对配准过程产生负面影响的那些负影响对应关系;<br />
+												5. 从剩下的一组好的对应关系中，估计一个变换行为。</p>
 										</dd>
-										<dt>Item 3</dt>
+										<dt>迭代最近点(icp)</dt>
 										<dd>
-											<p>Lorem ipsum dolor vestibulum ante ipsum primis in faucibus vestibulum. Blandit adipiscing eu felis iaculis volutpat ac adipiscing accumsan eu faucibus. Integer ac pellentesque praesent.</p>
+											<p>迭代最近点的思路为：<br />根据某种几何特性对数据进行匹配，并设这些匹配点为假想的对应点，然后根据这种对应关系求解运动参数。<br />
+												再利用这些运动参数对数据进行变换。并利用同一几何特征，确定新的对应关系，重复上述过程进行迭代，使得数据中的重叠部分充分吻合。<br />
+												ICP方法中使用的几何特性即点在空间中的距离。<br /><span class="image fit"><img src="../blogimages/2.png" alt="" /></span></p>
 										</dd>
 									</dl>
 
