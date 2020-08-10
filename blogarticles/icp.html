@@ -67,11 +67,20 @@
 										<dt>SVD奇异值分解</dt>
 										<dd>
 											<p><span class="image fit"><img src="../blogimages/3.png" alt="" /></span><br />再分别通过奇异值分解求得V,D。</p>
+											<pre><code>import numpy.matlib 
+import numpy as np 
+A = np.array([[1,5,7,6,1],[2,1,10,4,4],[3,6,7,5,2]])
+ATA=np.dot(A.T,A)
+lambdaV,V = np.linalg.eig(ATA)
+AAT=np.dot(A,A.T)
+lambdaU,U = np.linalg.eig(AAT)
+sigma = np.sqrt(lambdaU)
+									</code></pre>
 										</dd>
 									</dl>
 
 								<!-- Preformatted Code -->
-									<h2>SVD Python实现</h2>
+									<h3>SVD Python实现</h3>
 									<pre><code>import numpy.matlib 
 import numpy as np 
 A = np.array([[1,5,7,6,1],[2,1,10,4,4],[3,6,7,5,2]])
