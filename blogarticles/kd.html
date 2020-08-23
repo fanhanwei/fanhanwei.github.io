@@ -54,8 +54,8 @@
 										<dd>
 											<p>输入： 数据点集(Data_set)和所在空间(Range)<br />
 												1. 若点集为空，则返回空树。<br />
-												2. 调用节点生成程序：<br />   (1) 确定split域，对于所有描述子数据(特征向量)，统计他们在每个维上的数据方差。以SURF为例，描述子为64维，可得到64个方差。
-												选出方差最大值，对应的维即是split域的值。数据方差最大表明沿该坐标轴方向上的数据最分散。该方向上数据分割分辨率最高。<br />   (2) 确定Node_data域，
+												2. 调用节点生成程序：<br />&nbsp;&nbsp;(1) 确定split域，对于所有描述子数据(特征向量)，统计他们在每个维上的数据方差。以SURF为例，描述子为64维，可得到64个方差。
+												选出方差最大值，对应的维即是split域的值。数据方差最大表明沿该坐标轴方向上的数据最分散。该方向上数据分割分辨率最高。<br />&nbsp;&nbsp;(2) 确定Node_data域，
 												数据点集Data_set按其第split维的值排序，位于正中间的点为Node_data。Data_set'=Data_set/Node_data。<br />
 												3. data_left即为Data_set中在split域小于或等于Node_data的点，反之则为data_right。left_range为Range和data_left的并集，同理得right_range。<br />
 												4. :left为由data_left和left_range建立的kd_tree,设置：left的parent域(父节点)为kd。同理的得:right。<br />
