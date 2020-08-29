@@ -2644,7 +2644,7 @@ input, select, textarea {
 
 			.image.set img {
 				max-width: 100%;
-				max-height: 50%;
+				max-height: 5%;
 			}
 
 		.image.main {
