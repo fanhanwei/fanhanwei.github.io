@@ -2632,20 +2632,6 @@ input, select, textarea {
 				width: 100%;
 			}
 
-		.image.set {
-			display: inline;
-			width: 100%;
-		}
-
-			.image.set:first-child {
-				margin-top: 0;
-			}
-
-			.image.set img {
-				max-width: 100%;
-				max-height: 300px;
-			}
-
 		.image.main {
 			display: block;
 			margin: 4rem 0;
@@ -3881,7 +3867,6 @@ input, select, textarea {
 				border-style: solid;
 				border-top-width: 2px;
 				text-align: center;
-				height:640px;
 			}
 
 				#main > .posts > article > :last-child {
