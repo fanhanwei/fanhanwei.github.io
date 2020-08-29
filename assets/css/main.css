@@ -2633,8 +2633,8 @@ input, select, textarea {
 			}
 
 		.image.set {
-			display: table-cell;
-			margin: auto;
+			display: block;
+			margin: 0 auto;
 			width: 100%;
 		}
 
@@ -2664,10 +2664,6 @@ input, select, textarea {
 		@media screen and (max-width: 736px) {
 
 			.image.fit {
-				margin: 2rem 0;
-			}
-			
-			.image.set {
 				margin: 2rem 0;
 			}
 
@@ -3881,6 +3877,7 @@ input, select, textarea {
 			}
 
 			#main > .posts > article {
+				display:block;
 				border-color: #eeeeee;
 				border-left-width: 2px;
 				border-style: solid;
