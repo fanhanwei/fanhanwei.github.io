@@ -3886,6 +3886,8 @@ input, select, textarea {
 				border-style: solid;
 				border-top-width: 2px;
 				text-align: center;
+				width:283px;
+				height:500px;
 			}
 
 				#main > .posts > article > :last-child {
