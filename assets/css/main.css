@@ -2633,8 +2633,7 @@ input, select, textarea {
 			}
 
 		.image.set {
-			display: block;
-			margin: 0 auto;
+			display: inline;
 			width: 100%;
 		}
 
@@ -3877,7 +3876,6 @@ input, select, textarea {
 			}
 
 			#main > .posts > article {
-				display:block;
 				border-color: #eeeeee;
 				border-left-width: 2px;
 				border-style: solid;
