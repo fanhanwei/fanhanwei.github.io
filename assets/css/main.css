@@ -2633,7 +2633,7 @@ input, select, textarea {
 			}
 
 		.image.set {
-			display: block;
+			display: table-cell;
 			margin: auto;
 			width: 100%;
 		}
@@ -2644,7 +2644,7 @@ input, select, textarea {
 
 			.image.set img {
 				max-width: 100%;
-				max-height: 360px;
+				max-height: 300px;
 			}
 
 		.image.main {
@@ -3881,13 +3881,12 @@ input, select, textarea {
 			}
 
 			#main > .posts > article {
-				display: table;
 				border-color: #eeeeee;
 				border-left-width: 2px;
 				border-style: solid;
 				border-top-width: 2px;
 				text-align: center;
-				height:720px;
+				height:640px;
 			}
 
 				#main > .posts > article > :last-child {
