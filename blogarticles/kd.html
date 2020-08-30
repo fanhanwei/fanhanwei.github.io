@@ -118,13 +118,13 @@
 										</dd>
 										<dt>删除节点</dt>
 										<dd>
-											<p>假设待删节点T的切分维度为x，下面根据待删节点的几类不同情形进行考虑。
-a）无子树
-本身为叶子节点，直接删除。
-b）有右子树
-在T.right寻找x切分维度最小的节点p，然后替换被删节点T；递归处理删除节点p。
-c）无右子树有左子树
-在T.left寻找x切分维度最小的节点p，即p=findmin(T.left, cutting-dim=x)，然后用节点p替换被删节点T；将原T.left作为p.right；递归处理删除节点p。（之所以未采用findmax(T.left, cutting-dim=x)节点来替换被删节点，是由于原被删节点的左子树节点存在x维度最大值相等的情形，这样就破坏了左子树在x分割维度的坐标需小于其根节点的定义），如下为删除节点代码:</p>
+											<p>假设待删节点T的切分维度为x，下面根据待删节点的几类不同情形进行考虑。<br />
+												a）无子树：本身为叶子节点，直接删除。<br />
+												b）有右子树：在T.right寻找x切分维度最小的节点p，然后替换被删节点T；递归处理删除节点p。<br />
+												c）无右子树有左子树：在T.left寻找x切分维度最小的节点p，即p=findmin(T.left, cutting-dim=x)，
+												然后用节点p替换被删节点T；将原T.left作为p.right；递归处理删除节点p。
+												（之所以未采用findmax(T.left, cutting-dim=x)节点来替换被删节点，是由于原被删节点的左子树节点存在x维度最大值相等的情形，
+												这样就破坏了左子树在x分割维度的坐标需小于其根节点的定义），如下为删除节点代码:</p>
 											<pre><code>def delete(n, point, depth):
     cutting_dim = depth % len(point)
     if n.location == point:
@@ -143,6 +143,34 @@ c）无右子树有左子树
             delete(n.left, point, depth + 1)
         else:
             delete(n.right, point, depth + 1)
+											</code></pre>
+										</dd>
+											
+										<dt>scikit-learn使用</dt>
+										<dd>
+											<p>scikit-learn是一个实用的机器学习类库，其有KDTree的实现。如下例子为直观展示，仅构建了一个二维空间的k-d tree，
+												然后对其作k近邻搜索及指定半径的范围搜索。多维空间的检索，调用方式与此例相差无多。如下为最近邻搜索代码：</p>
+											<pre><code>import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.patches import Circle
+from sklearn.neighbors import KDTree
+np.random.seed(0)
+points = np.random.random((100, 2))
+tree = KDTree(points)
+point = points[0]
+# kNN
+dists, indices = tree.query([point], k=3)
+print(dists, indices)
+# query radius
+indices = tree.query_radius([point], r=0.2)
+print(indices)
+fig = plt.figure()
+ax = fig.add_subplot(111, aspect='equal')
+ax.add_patch(Circle(point, 0.2, color='r', fill=False))
+X, Y = [p[0] for p in points], [p[1] for p in points]
+plt.scatter(X, Y)
+plt.scatter([point[0]], [point[1]], c='r')
+plt.show()
 											</code></pre>
 										</dd>
 									</dl>
