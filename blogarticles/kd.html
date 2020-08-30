@@ -59,26 +59,82 @@
 												数据点集 Data_set 按其第 split 维的值排序，位于正中间的点为 Node_data。Data_set'=Data_set/Node_data。<br />
 												3. data_left即为Data_set中在split域小于或等于Node_data的点，反之则为data_right。left_range为Range和data_left的并集，同理得right_range。<br />
 												4. :left为由data_left和left_range建立的kd_tree,设置：left的parent域(父节点)为kd。同理的得:right。<br />
+												如下为k-d tree的构建代码：
 												</p>
+											<pre><code>def kd_tree(points, depth):
+    if 0 == len(points):
+        return None
+    cutting_dim = depth % len(points[0])
+    medium_index = len(points) // 2
+    points.sort(key=itemgetter(cutting_dim))
+    node = Node(points[medium_index])
+    node.left = kd_tree(points[:medium_index], depth + 1)
+    node.right = kd_tree(points[medium_index + 1:], depth + 1)
+    return node
+    											</code></pre>
 										</dd>
-										<dt>迭代最近点(icp)</dt>
+										<dt>寻找d维最小坐标值点</dt>
 										<dd>
-											<p>迭代最近点的思路为：<br />根据某种几何特性对数据进行匹配，并设这些匹配点为假想的对应点，然后根据这种对应关系求解运动参数。<br />
-												再利用这些运动参数对数据进行变换。并利用同一几何特征，确定新的对应关系，重复上述过程进行迭代，使得数据中的重叠部分充分吻合。<br />
-												ICP方法中使用的几何特性即点在空间中的距离。<br /><span class="image fit"><img src="../blogimages/2.png" alt="" /></span></p>
+											<p>a）若当前节点的切分维度是d, 因其右子树节点均大于等于当前节点在d维的坐标值，所以可以忽略其右子树，仅在其左子树进行搜索。若无左子树，当前节点即是最小坐标值节点。<br />
+												b）若当前节点的切分维度不是d，需在其左子树与右子树分别进行递归搜索。如下为寻找d维最小坐标值点代码：<br /></p>
+											<pre><code>def findmin(n, depth, cutting_dim, min):
+    if min is None:
+        min = n.location
+    if n is None:
+        return min
+    current_cutting_dim = depth % len(min)
+    if n.location[cutting_dim] < min[cutting_dim]:
+        min = n.location
+    if cutting_dim == current_cutting_dim:
+            return findmin(n.left, depth + 1, cutting_dim, min)
+    else:
+        leftmin = findmin(n.left, depth + 1, cutting_dim, min)
+        rightmin = findmin(n.right, depth + 1, cutting_dim, min)
+        if leftmin[cutting_dim] > rightmin[cutting_dim]:
+            return rightmin
+        else:
+            return leftmin
+    											</code></pre>
 										</dd>
-										<dt>SVD奇异值分解</dt>
+										<dt>新增节点</dt>
 										<dd>
-											<p><span class="image fit"><img src="../blogimages/3.png" alt="" /></span><br />再分别通过奇异值分解求得V,D。</p>
-											<pre><code>import numpy.matlib 
-import numpy as np 
-A = np.array([[1,5,7,6,1],[2,1,10,4,4],[3,6,7,5,2]])
-ATA=np.dot(A.T,A)
-lambdaV,V = np.linalg.eig(ATA)
-AAT=np.dot(A,A.T)
-lambdaU,U = np.linalg.eig(AAT)
-sigma = np.sqrt(lambdaU)
-									</code></pre>
+											<p>从根节点出发，若待插入节点在当前节点切分维度的坐标值小于当前节点在该维度的坐标值时，在其左子树插入；
+											若大于等于当前节点在该维度的坐标值时，在其右子树插入。递归遍历，直至叶子节点。如下为新增节点代码：</p>
+											<pre><code>def insert(n, point, depth):
+    if n is None:
+        return Node(point)
+    cutting_dim = depth % len(point)
+    if point[cutting_dim] < n.location[cutting_dim]:
+        if n.left is None:
+            n.left = Node(point)
+        else:
+            insert(n.left, point, depth + 1)
+    else:
+        if n.right is None:
+            n.right = Node(point)
+        else:
+            insert(n.right, point, depth + 1)
+											</code></pre>
+										</dd>
+										<dt>新增节点</dt>
+										<dd>
+											<p>从根节点出发，若待插入节点在当前节点切分维度的坐标值小于当前节点在该维度的坐标值时，在其左子树插入；
+											若大于等于当前节点在该维度的坐标值时，在其右子树插入。递归遍历，直至叶子节点。如下为新增节点代码：</p>
+											<pre><code>def insert(n, point, depth):
+    if n is None:
+        return Node(point)
+    cutting_dim = depth % len(point)
+    if point[cutting_dim] < n.location[cutting_dim]:
+        if n.left is None:
+            n.left = Node(point)
+        else:
+            insert(n.left, point, depth + 1)
+    else:
+        if n.right is None:
+            n.right = Node(point)
+        else:
+            insert(n.right, point, depth + 1)
+											</code></pre>
 										</dd>
 									</dl>
 
