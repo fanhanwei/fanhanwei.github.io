@@ -47,54 +47,37 @@
 									<dl>
 										<dt>简介</dt>
 										<dd>
-											<p>KD tree 是对数据点在k维空间（如二维(x，y)，三维(x，y，z)，k维(x1，y，z..)）中划分的一种数据结构，主要应用于多维空间关键数据的搜索（如：范围搜索和最近邻搜索）。<br />
-											k-d树是一种空间划分树，把整个空间划分为特定的几个部分，然后在特定空间的部分内进行相关搜索操作。 </p>
+											<p>脉动阵列，是现在某些智能加速芯片的一种架构；由一组处理单元 Processor Elements组成；
+											处理单元简称是PE，也经常简称为Cell；所有的Cell是用Mesh结构互连起来；
+											每个Cell处理一系列的流经自己的数据；之后传递给邻居的Cell，大部分的Cell都是相同的操作。<br />
+											SIMD是和其相似的架构，但是SIMD如名字表达的那样，控制指令是唯一的，数据是不同的，并且数据从内存加载到PE；
+											脉动阵列的区别是可能从片上的RAM加载到PE，并且每个PE有自己的控制单元，这样不仅仅是数据的并行了。</p>
 										</dd>
-										<dt>构建</dt>
+										<dt>设计优势点</dt>
 										<dd>
-											<p>输入： 数据点集(Data_set)和所在空间(Range)<br />
-												1. 若点集为空，则返回空树。<br />
-												2. 调用节点生成程序：<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 确定split域，对于所有描述子数据(特征向量)，统计他们在每个维上的数据方差。以SURF为例，描述子为64维，可得到64个方差。
-												选出方差最大值，对应的维即是split域的值。数据方差最大表明沿该坐标轴方向上的数据最分散。该方向上数据分割分辨率最高。<br />&nbsp;&nbsp;&nbsp;&nbsp;(2) 确定 Node_data 域，
-												数据点集 Data_set 按其第 split 维的值排序，位于正中间的点为 Node_data。Data_set'=Data_set/Node_data。<br />
-												3. data_left即为Data_set中在split域小于或等于Node_data的点，反之则为data_right。left_range为Range和data_left的并集，同理得right_range。<br />
-												4. :left为由data_left和left_range建立的kd_tree,设置：left的parent域(父节点)为kd。同理的得:right。<br />
-												如下为k-d tree的构建代码：
-												</p>
-											<pre><code>def kd_tree(points, depth):
-    if 0 == len(points):
-        return None
-    cutting_dim = depth % len(points[0])
-    medium_index = len(points) // 2
-    points.sort(key=itemgetter(cutting_dim))
-    node = Node(points[medium_index])
-    node.left = kd_tree(points[:medium_index], depth + 1)
-    node.right = kd_tree(points[medium_index + 1:], depth + 1)
-    return node
-    											</code></pre>
+											<p>脉冲阵列用在专用的加速芯片上的优势是：<br />
+											1. 设计上比较规整，简单；<br />
+											2. 通信或者传递信息的并发性好；<br />
+											3. 平衡了计算和IO，因为一般都是计算等待IO。</p>
 										</dd>
-										<dt>寻找d维最小坐标值点</dt>
+										<dt>设计劣势点</dt>
 										<dd>
-											<p>a）若当前节点的切分维度是d, 因其右子树节点均大于等于当前节点在d维的坐标值，所以可以忽略其右子树，仅在其左子树进行搜索。若无左子树，当前节点即是最小坐标值节点。<br />
-												b）若当前节点的切分维度不是d，需在其左子树与右子树分别进行递归搜索。如下为寻找d维最小坐标值点代码：<br /></p>
-											<pre><code>def findmin(n, depth, cutting_dim, min):
-    if min is None:
-        min = n.location
-    if n is None:
-        return min
-    current_cutting_dim = depth % len(min)
-    if n.location[cutting_dim] < min[cutting_dim]:
-        min = n.location
-    if cutting_dim == current_cutting_dim:
-            return findmin(n.left, depth + 1, cutting_dim, min)
-    else:
-        leftmin = findmin(n.left, depth + 1, cutting_dim, min)
-        rightmin = findmin(n.right, depth + 1, cutting_dim, min)
-        if leftmin[cutting_dim] > rightmin[cutting_dim]:
-            return rightmin
-        else:
-            return leftmin
-    											</code></pre>
+											<p>脉冲阵列用在专用的加速芯片上的优势是：<br />
+											1. 全局同步受限于时延；<br />
+											2. 片上RAM的带宽要求比较大；<br />
+											3. 因为缺少互联的协议子系统，而缺少软件上的容错。</p>
+										</dd>									
+										<dt>分类</dt>
+										<dd>
+											<p>一维：适合单一的IO，因此用处不是很大；<br />
+											二维：一般都是平面矩阵，放了很多的处理单元，但是只允许边界的单元进行IO；<br />
+											三维：允许IO经过每个处理单元。</p>
+										</dd>
+										<dt>举例：使用二维脉动阵列计算矩阵乘</dt>
+										<dd>
+											<p>使用三个计算单元计算这个矩阵乘的设计<br /><span class="image fit"><img src="../blogimages/samm1.png" alt="" /></span><br />
+												下面是三个脉动阵列：<br /><span class="image fit"><img src="../blogimages/samm2.jpg" alt="" /></span><br />
+												下面是每个步骤的过程数据：<br /><span class="image fit"><img src="../blogimages/samm3.png" alt="" /></span></p>
 										</dd>
 										<dt>新增节点</dt>
 										<dd>
