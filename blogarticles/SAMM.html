@@ -82,14 +82,15 @@
 										<dt>PE计算单元</dt>
 										<dd>
 											<p>代码实现：</p>
-											<pre><code>module pe(	clk,
-				reset_n,
-				clr,
-				in_a,
-				in_b,
-				out_a,
-				out_b,
-				out_c					
+											<pre><code>
+module pe(	clk,
+			reset_n,
+			clr,
+			in_a,
+			in_b,
+			out_a,
+			out_b,
+			out_c					
 			);
 
 parameter size = 8;
@@ -113,17 +114,17 @@ always@(posedge clk or negedge reset_n)
 				out_c <= 0;
 			end
 		else if(clr)
-					begin
-						out_c <= in_a * in_b; // clear the pervious result
-						out_a <= in_a;
-						out_b <= in_b;
-					end
-				else
-					begin
-						out_a <= in_a;
-						out_b <= in_b;
-						out_c <= in_a * in_b + out_c;
-					end
+				begin
+					out_c <= in_a * in_b; // clear the pervious result
+					out_a <= in_a;
+					out_b <= in_b;
+				end
+			else
+				begin
+					out_a <= in_a;
+					out_b <= in_b;
+					out_c <= in_a * in_b + out_c;
+				end
 	end
 endmodule
 
@@ -132,24 +133,25 @@ endmodule
 										<dt>systolic array</dt>
 										<dd>
 											<p>用于icp的systolic array需要做3*4与4*n矩阵的乘法，得到一个3*n矩阵，即一个新的点集。具体代码：</p>
-											<pre><code>module systolic_array(	clk,
-								reset_n,
-								in_a11,
-								in_a21,
-								in_a31,
-								in_b11,
-								in_b12,
-								in_b13,
-								out_c11,
-								out_c12,
-								out_c13,
-								out_c21,
-								out_c22,
-								out_c23,
-								out_c31,
-								out_c32,
-								out_c33
-							);
+											<pre><code>
+module systolic_array(	clk,
+						reset_n,
+						in_a11,
+						in_a21,
+						in_a31,
+						in_b11,
+						in_b12,
+						in_b13,
+						out_c11,
+						out_c12,
+						out_c13,
+						out_c21,
+						out_c22,
+						out_c23,
+						out_c31,
+						out_c32,
+						out_c33
+						);
 
 parameter size = 8;
 
