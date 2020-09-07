@@ -207,99 +207,99 @@ always@(negedge clk or negedge reset_n) //inner clk for changing state
 			end
 		else
 			begin
-				counter <= counter + 2'd1;
+				counter <= (counter==2'd2)? 2'd0 : counter + 2'd1;
 			end
 	end
 
 pe pe11( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd0),
-			.in_a(in_a11),
-			.in_b(in_b11),
-			.out_a(in_a12),
-			.out_b(in_b21),
-			.out_c(c11)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd0),
+	.in_a(in_a11),
+	.in_b(in_b11),
+	.out_a(in_a12),
+	.out_b(in_b21),
+	.out_c(c11)
+	);
 		
 pe pe21( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd1),
-			.in_a(in_a21),
-			.in_b(in_b21),
-			.out_a(in_a22),
-			.out_b(in_b31),
-			.out_c(c21)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd1),
+	.in_a(in_a21),
+	.in_b(in_b21),
+	.out_a(in_a22),
+	.out_b(in_b31),
+	.out_c(c21)
+ );
 		
 pe pe31( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd2),
-			.in_a(in_a31),
-			.in_b(in_b31),
-			.out_a(in_a32),
-			.out_b(),
-			.out_c(c31)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd2),
+	.in_a(in_a31),
+	.in_b(in_b31),
+	.out_a(in_a32),
+	.out_b(),
+	.out_c(c31)
+	);
 		 
 pe pe12( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd1),
-			.in_a(in_a12),
-			.in_b(in_b12),
-			.out_a(in_a13),
-			.out_b(in_b22),
-			.out_c(c12)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd1),
+	.in_a(in_a12),
+	.in_b(in_b12),
+	.out_a(in_a13),
+	.out_b(in_b22),
+	.out_c(c12)
+	);
 		
 pe pe22( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd2),
-			.in_a(in_a22),
-			.in_b(in_b22),
-			.out_a(in_a23),
-			.out_b(in_b32),
-			.out_c(c22)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd2),
+	.in_a(in_a22),
+	.in_b(in_b22),
+	.out_a(in_a23),
+	.out_b(in_b32),
+	.out_c(c22)
+	);
 		
 pe pe32( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd3),
-			.in_a(in_a32),
-			.in_b(in_b32),
-			.out_a(in_a33),
-			.out_b(),
-			.out_c(c32)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd0),
+	.in_a(in_a32),
+	.in_b(in_b32),
+	.out_a(in_a33),
+	.out_b(),
+	.out_c(c32)
+	);
 			
 pe pe13( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd2),
-			.in_a(in_a13),
-			.in_b(in_b13),
-			.out_a(),
-			.out_b(in_b23),
-			.out_c(c13)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd2),
+	.in_a(in_a13),
+	.in_b(in_b13),
+	.out_a(),
+	.out_b(in_b23),
+	.out_c(c13)
+	);
 		
 pe pe23( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd3),
-			.in_a(in_a23),
-			.in_b(in_b23),
-			.out_a(),
-			.out_b(in_b33),
-			.out_c(c23)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd0),
+	.in_a(in_a23),
+	.in_b(in_b23),
+	.out_a(),
+	.out_b(in_b33),
+	.out_c(c23)
+	);
 		
 pe pe33( .clk(clk),
-			.reset_n(reset_n),
-			.clr(counter==2'd0),
-			.in_a(in_a33),
-			.in_b(in_b33),
-			.out_a(),
-			.out_b(),
-			.out_c(c33)
-		 );
+	.reset_n(reset_n),
+	.clr(counter==2'd1),
+	.in_a(in_a33),
+	.in_b(in_b33),
+	.out_a(),
+	.out_b(),
+	.out_c(c33)
+	);
 		 
 always@(posedge clk or negedge reset_n)//this part can pick out the results
 	begin
@@ -321,23 +321,20 @@ always@(posedge clk or negedge reset_n)//this part can pick out the results
 					3'd0:
 						begin
 							out_c11 <= c11;
-							out_c33 <= c33;
+							out_c23 <= c23;
+							out_c32 <= c32;
 						end
 					3'd1:
 						begin
 							out_c12 <= c12;
 							out_c21 <= c21;
+							out_c33 <= c33;
 						end
 					3'd2:
 						begin
 							out_c13 <= c13;
 							out_c22 <= c22;
 							out_c31 <= c31;
-						end
-					3'd3:
-						begin
-							out_c23 <= c23;
-							out_c32 <= c32;
 						end
 					default:
 						begin
@@ -354,8 +351,7 @@ always@(posedge clk or negedge reset_n)//this part can pick out the results
 				endcase
 			end
 	end
-endmodule
-		
+endmodule		
 											</code></pre>
 											<span class="image fit"><img src="../blogimages/samm4.png" alt="" /></span>
 										</dd>
@@ -365,7 +361,16 @@ endmodule
 											<p>1.What's the size of the data? <br/>
 												2.Is the data 3-Dimentional? <br/>
 												3.How the data stored? If we use the bram, how many ports does it have?
-												 For the systolic array is pipelined, I need to store 3 data at the same time.
+												 For the systolic array is pipelined, I need to store 3 data at the same time.<br/>
+											</p>
+										</dd>
+										
+										<dt>Ideas</dt>
+										<dd>
+											<p>1.三个数据成一组，取出后decode； <br/>
+												2.Is the data 3-Dimentional? <br/>
+												3.How the data stored? If we use the bram, how many ports does it have?
+												 For the systolic array is pipelined, I need to store 3 data at the same time.<br/>
 											</p>
 										</dd>
 									</dl>
