@@ -1,0 +1,245 @@
+<!DOCTYPE HTML>
+<!--
+	Massively by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html>
+	<head>
+		<title>FAN, Hanwei 樊瀚伟 Blog</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<link rel="stylesheet" href="../assets/css/main.css" />
+		<noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+	</head>
+	<body class="is-preload">
+
+		<!-- Wrapper -->
+			<div id="wrapper">
+
+				<!-- Header -->
+					<header id="header">
+						<a href="../index.html" class="logo">FAN, Hanwei</a>
+					</header>
+
+				<!-- Nav -->
+					<nav id="nav">
+						<ul class="links">
+							<li><a href="../index.html">About me</a></li>
+							<li><a href="../RH.html">Recent Highlights</a></li>
+							<li class="active"><a href="../Blog.html">Blog</a></li>
+						</ul>
+						<ul class="icons">
+							<li><a href="MAILTO:hanweifan2018@outlook.com" class="icon regular fa-envelope"><span class="label">E-Mail</span></a></li>
+							<li><a href="https://www.linkedin.com/in/hanwei-fan-bb3b69192/" class="icon brands fa-linkedin"><span class="label">Linkedin</span></a></li>
+							<li><a href="https://www.instagram.com/fan.hanwei/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+							<li><a href="https://github.com/fanhanwei" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+						</ul>
+					</nav>
+
+				<!-- Main -->
+					<div id="main">
+						<!-- Post -->
+							<section class="post">
+								<header class="major">
+									<h1>K-dimension Tree</h1>
+								</header>
+									<dl>
+										<dt>简介</dt>
+										<dd>
+											<p>KD tree 是对数据点在k维空间（如二维(x，y)，三维(x，y，z)，k维(x1，y，z..)）中划分的一种数据结构，主要应用于多维空间关键数据的搜索（如：范围搜索和最近邻搜索）。<br />
+											k-d树是一种空间划分树，把整个空间划分为特定的几个部分，然后在特定空间的部分内进行相关搜索操作。 </p>
+										</dd>
+										<dt>构建</dt>
+										<dd>
+											<p>输入： 数据点集(Data_set)和所在空间(Range)<br />
+												1. 若点集为空，则返回空树。<br />
+												2. 调用节点生成程序：<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 确定split域，对于所有描述子数据(特征向量)，统计他们在每个维上的数据方差。以SURF为例，描述子为64维，可得到64个方差。
+												选出方差最大值，对应的维即是split域的值。数据方差最大表明沿该坐标轴方向上的数据最分散。该方向上数据分割分辨率最高。<br />&nbsp;&nbsp;&nbsp;&nbsp;(2) 确定 Node_data 域，
+												数据点集 Data_set 按其第 split 维的值排序，位于正中间的点为 Node_data。Data_set'=Data_set/Node_data。<br />
+												3. data_left即为Data_set中在split域小于或等于Node_data的点，反之则为data_right。left_range为Range和data_left的并集，同理得right_range。<br />
+												4. :left为由data_left和left_range建立的kd_tree,设置：left的parent域(父节点)为kd。同理的得:right。<br />
+												如下为k-d tree的构建代码：
+												</p>
+											<pre><code>def kd_tree(points, depth):
+    if 0 == len(points):
+        return None
+    cutting_dim = depth % len(points[0])
+    medium_index = len(points) // 2
+    points.sort(key=itemgetter(cutting_dim))
+    node = Node(points[medium_index])
+    node.left = kd_tree(points[:medium_index], depth + 1)
+    node.right = kd_tree(points[medium_index + 1:], depth + 1)
+    return node
+    											</code></pre>
+										</dd>
+										<dt>寻找d维最小坐标值点</dt>
+										<dd>
+											<p>a）若当前节点的切分维度是d, 因其右子树节点均大于等于当前节点在d维的坐标值，所以可以忽略其右子树，仅在其左子树进行搜索。若无左子树，当前节点即是最小坐标值节点。<br />
+												b）若当前节点的切分维度不是d，需在其左子树与右子树分别进行递归搜索。如下为寻找d维最小坐标值点代码：<br /></p>
+											<pre><code>def findmin(n, depth, cutting_dim, min):
+    if min is None:
+        min = n.location
+    if n is None:
+        return min
+    current_cutting_dim = depth % len(min)
+    if n.location[cutting_dim] < min[cutting_dim]:
+        min = n.location
+    if cutting_dim == current_cutting_dim:
+            return findmin(n.left, depth + 1, cutting_dim, min)
+    else:
+        leftmin = findmin(n.left, depth + 1, cutting_dim, min)
+        rightmin = findmin(n.right, depth + 1, cutting_dim, min)
+        if leftmin[cutting_dim] > rightmin[cutting_dim]:
+            return rightmin
+        else:
+            return leftmin
+    											</code></pre>
+										</dd>
+										<dt>新增节点</dt>
+										<dd>
+											<p>从根节点出发，若待插入节点在当前节点切分维度的坐标值小于当前节点在该维度的坐标值时，在其左子树插入；
+											若大于等于当前节点在该维度的坐标值时，在其右子树插入。递归遍历，直至叶子节点。如下为新增节点代码：</p>
+											<pre><code>def insert(n, point, depth):
+    if n is None:
+        return Node(point)
+    cutting_dim = depth % len(point)
+    if point[cutting_dim] < n.location[cutting_dim]:
+        if n.left is None:
+            n.left = Node(point)
+        else:
+            insert(n.left, point, depth + 1)
+    else:
+        if n.right is None:
+            n.right = Node(point)
+        else:
+            insert(n.right, point, depth + 1)
+											</code></pre>
+										</dd>
+										<dt>删除节点</dt>
+										<dd>
+											<p>假设待删节点T的切分维度为x，下面根据待删节点的几类不同情形进行考虑。<br />
+												a）无子树：本身为叶子节点，直接删除。<br />
+												b）有右子树：在T.right寻找x切分维度最小的节点p，然后替换被删节点T；递归处理删除节点p。<br />
+												c）无右子树有左子树：在T.left寻找x切分维度最小的节点p，即p=findmin(T.left, cutting-dim=x)，
+												然后用节点p替换被删节点T；将原T.left作为p.right；递归处理删除节点p。
+												（之所以未采用findmax(T.left, cutting-dim=x)节点来替换被删节点，是由于原被删节点的左子树节点存在x维度最大值相等的情形，
+												这样就破坏了左子树在x分割维度的坐标需小于其根节点的定义），如下为删除节点代码:</p>
+											<pre><code>def delete(n, point, depth):
+    cutting_dim = depth % len(point)
+    if n.location == point:
+        if n.right is not None:
+            n.location = findmin(n.right, depth + 1, cutting_dim, None)
+            delete(n.right, n.location, depth + 1)
+        elif n.left is not None:
+            n.location = findmin(n.left, depth + 1)
+            delete(n.left, n.location, depth + 1)
+            n.right = n.left
+            n.left = None
+        else:
+            n = None
+    else:
+        if point[cutting_dim] < n.location[cutting_dim]:
+            delete(n.left, point, depth + 1)
+        else:
+            delete(n.right, point, depth + 1)
+											</code></pre>
+										</dd>
+											
+										<dt>scikit-learn使用</dt>
+										<dd>
+											<p>scikit-learn是一个实用的机器学习类库，其有KDTree的实现。如下例子为直观展示，仅构建了一个二维空间的k-d tree，
+												然后对其作k近邻搜索及指定半径的范围搜索。多维空间的检索，调用方式与此例相差无多。如下为最近邻搜索代码：</p>
+											<pre><code>import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.patches import Circle
+from sklearn.neighbors import KDTree
+np.random.seed(0)
+points = np.random.random((100, 2))
+tree = KDTree(points)
+point = points[0]
+# kNN
+dists, indices = tree.query([point], k=3)
+print(dists, indices)
+# query radius
+indices = tree.query_radius([point], r=0.2)
+print(indices)
+fig = plt.figure()
+ax = fig.add_subplot(111, aspect='equal')
+ax.add_patch(Circle(point, 0.2, color='r', fill=False))
+X, Y = [p[0] for p in points], [p[1] for p in points]
+plt.scatter(X, Y)
+plt.scatter([point[0]], [point[1]], c='r')
+plt.show()
+											</code></pre>
+										</dd>
+									</dl>
+
+								<!-- Preformatted Code -->
+									<h3>xx</h3>
+									<pre><code>import numpy as np
+
+									</code></pre>
+								
+								<p>引用自：https://www.cnblogs.com/flyinggod/p/8727584.html</p>
+							</section>
+						
+						<!-- Footer -->
+							<footer>
+								<div class="pagination">
+									<ul class="actions special">
+										<li><a href="../Blog.html" class="button">Back</a></li>
+									</ul>
+								</div>
+							</footer>
+
+					</div>
+
+				<!-- Footer -->
+					<footer id="footer">
+						<section class="split contact">
+							<section class="alt">
+								<h3>Address</h3>
+								<p>The Hong Kong Univ. of Sci. and Tech.<br />
+								Clear Water Bay, Kowloon, Hong Kong, China </p>
+							</section>
+							<section>
+								<h3>Phone</h3>
+								<p>Privacy</p>
+							</section>
+						</section>
+						<section class="split contact">
+							<section class="alt">
+								<h3>Email</h3>
+								<p><a href="MAILTO:hanweifan2018@outlook.com">hanweifan2018@outlook.com</a><br />
+									You can write to me either in English or Chinese</p>
+							</section>
+							<section>
+								<h3>Social</h3>
+								<ul class="icons alt">
+									<li><a href="https://www.linkedin.com/in/hanwei-fan-bb3b69192/" class="icon brands fa-linkedin"><span class="label">Linkdin</span></a></li>
+									<li><a href="https://www.instagram.com/fan.hanwei/" class="icon brands fa-instagram"><span class="label">Instagram</span></a></li>
+									<li><a href="https://github.com/fanhanwei" class="icon brands fa-github"><span class="label">GitHub</span></a></li>
+								</ul>
+							</section>
+						</section>
+					</footer>
+
+				<!-- Copyright -->
+					<div id="copyright">
+						<ul><li>&copy; FAN, Hanwei. All Rights Reserved.</li><li>Design: <a href="https://html5up.net">HTML5 UP</a></li></ul>
+					</div>
+
+			</div>
+
+		<!-- Scripts -->
+			<script src="../assets/js/jquery.min.js"></script>
+			<script src="../assets/js/jquery.scrollex.min.js"></script>
+			<script src="../assets/js/jquery.scrolly.min.js"></script>
+			<script src="../assets/js/browser.min.js"></script>
+			<script src="../assets/js/breakpoints.min.js"></script>
+			<script src="../assets/js/util.js"></script>
+			<script src="../assets/js/main.js"></script>
+
+	</body>
+</html>
