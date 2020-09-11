@@ -42,40 +42,36 @@
 						<!-- Post -->
 							<section class="post">
 								<header class="major">
-									<h1>K-dimension Tree</h1>
+									<h1>Bayesian Optimization</h1>
 								</header>
 									<dl>
 										<dt>简介</dt>
 										<dd>
-											<p>KD tree 是对数据点在k维空间（如二维(x，y)，三维(x，y，z)，k维(x1，y，z..)）中划分的一种数据结构，主要应用于多维空间关键数据的搜索（如：范围搜索和最近邻搜索）。<br />
-											k-d树是一种空间划分树，把整个空间划分为特定的几个部分，然后在特定空间的部分内进行相关搜索操作。 </p>
+											<p>贝叶斯优化适用于用尽可能少的数据寻找出函数极值的应用场合。例如石油勘探，每次钻井勘测开销巨大，业主希望用最少的勘测次数找出石油最丰富的
+											地块儿，则贝叶斯优化能够为此提供帮助。</p>
 										</dd>
+										
+										<dt>限制</dt>
+										<dd>
+											<p> 1. 被测函数有简单的可行域；<br />
+												2. 被测函数连续且结构简单，极值易求；<br />
+												3. 无需求导，不提供梯度信息；<br />
+												4. 训练集数据有限；<br />
+												5. 如有噪声，则噪声是独立的且呈正态分布，具有共同但未知的方差。
+												</p>
+										
 										<dt>构建</dt>
 										<dd>
-											<p>输入： 数据点集(Data_set)和所在空间(Range)<br />
-												1. 若点集为空，则返回空树。<br />
-												2. 调用节点生成程序：<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(1) 确定split域，对于所有描述子数据(特征向量)，统计他们在每个维上的数据方差。以SURF为例，描述子为64维，可得到64个方差。
-												选出方差最大值，对应的维即是split域的值。数据方差最大表明沿该坐标轴方向上的数据最分散。该方向上数据分割分辨率最高。<br />&nbsp;&nbsp;&nbsp;&nbsp;(2) 确定 Node_data 域，
-												数据点集 Data_set 按其第 split 维的值排序，位于正中间的点为 Node_data。Data_set'=Data_set/Node_data。<br />
-												3. data_left即为Data_set中在split域小于或等于Node_data的点，反之则为data_right。left_range为Range和data_left的并集，同理得right_range。<br />
-												4. :left为由data_left和left_range建立的kd_tree,设置：left的parent域(父节点)为kd。同理的得:right。<br />
-												如下为k-d tree的构建代码：
+											<p> 1. 设计代表模型，对函数建模并定义其先验概率；<br />
+												2. 获取训练集，利用贝叶斯规则计算后验概率；<br />
+												3. 利用取样函数（acquisition function）α(x)获得下一个采样点argmaxα(x)。其中取样函数为后验概率的函数；<br />
+												4. 新增采样点，并回到步骤二。如此迭代直至收敛或预算耗尽。
 												</p>
-											<pre><code>def kd_tree(points, depth):
-    if 0 == len(points):
-        return None
-    cutting_dim = depth % len(points[0])
-    medium_index = len(points) // 2
-    points.sort(key=itemgetter(cutting_dim))
-    node = Node(points[medium_index])
-    node.left = kd_tree(points[:medium_index], depth + 1)
-    node.right = kd_tree(points[medium_index + 1:], depth + 1)
-    return node
-    											</code></pre>
 										</dd>
 										<dt>寻找d维最小坐标值点</dt>
 										<dd>
-											<p>a）若当前节点的切分维度是d, 因其右子树节点均大于等于当前节点在d维的坐标值，所以可以忽略其右子树，仅在其左子树进行搜索。若无左子树，当前节点即是最小坐标值节点。<br />
+											<p>为实现此目标，我们需建立acquisition functions，
+												a）若当前节点的切分维度是d, 因其右子树节点均大于等于当前节点在d维的坐标值，所以可以忽略其右子树，仅在其左子树进行搜索。若无左子树，当前节点即是最小坐标值节点。<br />
 												b）若当前节点的切分维度不是d，需在其左子树与右子树分别进行递归搜索。如下为寻找d维最小坐标值点代码：<br /></p>
 											<pre><code>def findmin(n, depth, cutting_dim, min):
     if min is None:
