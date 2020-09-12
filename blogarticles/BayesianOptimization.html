@@ -64,10 +64,20 @@
 										<dd>
 											<p> 1. 设计代表模型，对函数建模并定义其先验概率；<br />
 												2. 获取训练集，利用贝叶斯规则计算后验概率；<br />
+												3. 利用取样函数(acquisition function) &alpha;(x)获得下一个采样点<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>argmax</mi><mn>x</mn></msub><mi>&alpha;(x)</mi></math>。其中取样函数为后验概率的函数；<br />
+												4. 新增采样点，并回到步骤二。如此迭代直至收敛或预算耗尽。
+												</p>
+										</dd>
+										
+										<dt>取样函数（acquisition function）</dt>
+										<dd>
+											<p> 1. PROBABILITY OF IMPROVEMENT (PI)：<br />选择相对于当前最大值有所提升的可能性最高的点作为下一个查询点；<br /><img src="blogimages/b_o1.png" alt="" />当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。<br />
+												2. 获取训练集，利用贝叶斯规则计算后验概率；<br />
 												3. 利用取样函数（acquisition function）α(x)获得下一个采样点argmaxα(x)。其中取样函数为后验概率的函数；<br />
 												4. 新增采样点，并回到步骤二。如此迭代直至收敛或预算耗尽。
 												</p>
 										</dd>
+										
 										<dt>寻找d维最小坐标值点</dt>
 										<dd>
 											<p>为实现此目标，我们需建立acquisition functions，
