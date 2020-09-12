@@ -49,7 +49,7 @@
 										<dt>简介</dt>
 										<dd>
 											<p>贝叶斯优化适用于用尽可能少的数据寻找出函数极值的应用场合。例如石油勘探，每次钻井勘测开销巨大，业主希望用最少的勘测次数找出石油最丰富的
-											地块儿，则贝叶斯优化能够为此提供帮助。<br />，贝叶斯优化不关注全剧的分布状况</p>
+											地块儿，则贝叶斯优化能够为此提供帮助。</p>
 										</dd>
 										
 										<dt>限制</dt>
@@ -87,54 +87,11 @@
 											<p>该方案选取最优可能获得最大幅度提高的点作为下一个查询点，注重于提高回报。<br /><img src="../blogimages/b_o2.png" alt="" width="510" height="390"/><br />
 											同样，当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。</p>
 										</dd>
-										<dt>新增节点</dt>
+										
+										<dt>Thompson Sampling</dt>
 										<dd>
-											<p>从根节点出发，若待插入节点在当前节点切分维度的坐标值小于当前节点在该维度的坐标值时，在其左子树插入；
-											若大于等于当前节点在该维度的坐标值时，在其右子树插入。递归遍历，直至叶子节点。如下为新增节点代码：</p>
-											<pre><code>def insert(n, point, depth):
-    if n is None:
-        return Node(point)
-    cutting_dim = depth % len(point)
-    if point[cutting_dim] < n.location[cutting_dim]:
-        if n.left is None:
-            n.left = Node(point)
-        else:
-            insert(n.left, point, depth + 1)
-    else:
-        if n.right is None:
-            n.right = Node(point)
-        else:
-            insert(n.right, point, depth + 1)
-											</code></pre>
-										</dd>
-										<dt>删除节点</dt>
-										<dd>
-											<p>假设待删节点T的切分维度为x，下面根据待删节点的几类不同情形进行考虑。<br />
-												a）无子树：本身为叶子节点，直接删除。<br />
-												b）有右子树：在T.right寻找x切分维度最小的节点p，然后替换被删节点T；递归处理删除节点p。<br />
-												c）无右子树有左子树：在T.left寻找x切分维度最小的节点p，即p=findmin(T.left, cutting-dim=x)，
-												然后用节点p替换被删节点T；将原T.left作为p.right；递归处理删除节点p。
-												（之所以未采用findmax(T.left, cutting-dim=x)节点来替换被删节点，是由于原被删节点的左子树节点存在x维度最大值相等的情形，
-												这样就破坏了左子树在x分割维度的坐标需小于其根节点的定义），如下为删除节点代码:</p>
-											<pre><code>def delete(n, point, depth):
-    cutting_dim = depth % len(point)
-    if n.location == point:
-        if n.right is not None:
-            n.location = findmin(n.right, depth + 1, cutting_dim, None)
-            delete(n.right, n.location, depth + 1)
-        elif n.left is not None:
-            n.location = findmin(n.left, depth + 1)
-            delete(n.left, n.location, depth + 1)
-            n.right = n.left
-            n.left = None
-        else:
-            n = None
-    else:
-        if point[cutting_dim] < n.location[cutting_dim]:
-            delete(n.left, point, depth + 1)
-        else:
-            delete(n.right, point, depth + 1)
-											</code></pre>
+											<p>该方案选取最优可能获得最大幅度提高的点作为下一个查询点，注重于提高回报。<br /><img src="../blogimages/b_o2.png" alt="" width="510" height="390"/><br />
+											同样，当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。</p>
 										</dd>
 											
 										<dt>scikit-learn使用</dt>
@@ -172,7 +129,7 @@ plt.show()
 
 									</code></pre>
 								
-								<p>引用自：https://www.cnblogs.com/flyinggod/p/8727584.html</p>
+								<p>引用自：https://distill.pub/2020/bayesian-optimization/</p>
 							</section>
 						
 						<!-- Footer -->
