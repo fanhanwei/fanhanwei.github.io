@@ -44,11 +44,12 @@
 								<header class="major">
 									<h1>Bayesian Optimization</h1>
 								</header>
+									<h3>贝叶斯优化</h3>
 									<dl>
 										<dt>简介</dt>
 										<dd>
 											<p>贝叶斯优化适用于用尽可能少的数据寻找出函数极值的应用场合。例如石油勘探，每次钻井勘测开销巨大，业主希望用最少的勘测次数找出石油最丰富的
-											地块儿，则贝叶斯优化能够为此提供帮助。</p>
+											地块儿，则贝叶斯优化能够为此提供帮助。<br />，贝叶斯优化不关注全剧的分布状况</p>
 										</dd>
 										
 										<dt>限制</dt>
@@ -69,13 +70,17 @@
 												</p>
 										</dd>
 										
-										<dt>取样函数（acquisition function）</dt>
+										<dt>相比于active learning</dt>
 										<dd>
-											<p> 1. PROBABILITY OF IMPROVEMENT (PI)：<br />选择相对于当前最大值有所提升的可能性最高的点作为下一个查询点；<br /><img src="blogimages/b_o1.png" alt="" />当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。<br />
-												2. 获取训练集，利用贝叶斯规则计算后验概率；<br />
-												3. 利用取样函数（acquisition function）α(x)获得下一个采样点argmaxα(x)。其中取样函数为后验概率的函数；<br />
-												4. 新增采样点，并回到步骤二。如此迭代直至收敛或预算耗尽。
-												</p>
+											<p>主动学习关注全局的分布，会优先将不确定性(variance)最高的点纳入训练集。贝叶斯优化不关注全剧的分布状况，只在意极值点的位置。</p>
+										</dd>
+										
+										<h3>取样函数（acquisition function）</h3>
+										<dt>PROBABILITY OF IMPROVEMENT (PI)</dt>
+										<dd>
+											<p> 选择相对于当前最大值有所提升的可能性最高的点作为下一个查询点；<br /><img src="../blogimages/b_o1.png" alt="" width="486" height="333"/><br />
+											当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。<br />
+											</p>
 										</dd>
 										
 										<dt>寻找d维最小坐标值点</dt>
