@@ -78,34 +78,14 @@
 										<h3>取样函数（acquisition function）</h3>
 										<dt>PROBABILITY OF IMPROVEMENT (PI)</dt>
 										<dd>
-											<p> 选择相对于当前最大值有所提升的可能性最高的点作为下一个查询点；<br /><img src="../blogimages/b_o1.png" alt="" width="486" height="333"/><br />
-											当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。<br />
-											</p>
+											<p>该方案选择最大值最有可能提高的点作为下一个查询点，注重于减小风险。<br /><img src="../blogimages/b_o1.png" alt="" width="486" height="333"/><br />
+											当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。</p>
 										</dd>
 										
-										<dt>寻找d维最小坐标值点</dt>
+										<dt>EXPECTED IMPROVEMENT (EI)</dt>
 										<dd>
-											<p>为实现此目标，我们需建立acquisition functions，
-												a）若当前节点的切分维度是d, 因其右子树节点均大于等于当前节点在d维的坐标值，所以可以忽略其右子树，仅在其左子树进行搜索。若无左子树，当前节点即是最小坐标值节点。<br />
-												b）若当前节点的切分维度不是d，需在其左子树与右子树分别进行递归搜索。如下为寻找d维最小坐标值点代码：<br /></p>
-											<pre><code>def findmin(n, depth, cutting_dim, min):
-    if min is None:
-        min = n.location
-    if n is None:
-        return min
-    current_cutting_dim = depth % len(min)
-    if n.location[cutting_dim] < min[cutting_dim]:
-        min = n.location
-    if cutting_dim == current_cutting_dim:
-            return findmin(n.left, depth + 1, cutting_dim, min)
-    else:
-        leftmin = findmin(n.left, depth + 1, cutting_dim, min)
-        rightmin = findmin(n.right, depth + 1, cutting_dim, min)
-        if leftmin[cutting_dim] > rightmin[cutting_dim]:
-            return rightmin
-        else:
-            return leftmin
-    											</code></pre>
+											<p>该方案选取最优可能获得最大幅度提高的点作为下一个查询点，注重于提高回报。<br /><img src="../blogimages/b_o2.png" alt="" width="510" height="390"/><br />
+											同样，当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。</p>
 										</dd>
 										<dt>新增节点</dt>
 										<dd>
