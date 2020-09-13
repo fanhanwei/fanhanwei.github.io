@@ -94,6 +94,45 @@
 											<p>该方案每一次迭代都从后验中选取一个函数，并对其进行进一步优化。该方案能够在对高不确定性区域进行探索的同时进一步研究已知最大区域。</p>
 										</dd>
 									</dl>
+									
+									<h3>在神经网络中使用Bayesian Optimization</h3>
+									<p>贝叶斯优化可以帮助我们快速的找到最优超参数，如：学习速率、batch size和激活函数等。</p>
+									<pre><code>log_batch_size = Integer(
+  low=2,
+  high=7,
+  name='log_batch_size'
+)
+  lr = Real(
+  low=1e-6,
+  high=1e0,
+  prior='log-uniform',
+  name='lr'
+)
+activation = Categorical(
+  categories=['relu', 'sigmoid'],
+  name='activation'
+)
+
+dimensions = [
+  dim_num_batch_size_to_base,
+  dim_learning_rate,
+  dim_activation
+]
+Now import gp-minimize 18 from scikit-optim to perform the optimization. Below we show calling the optimizer using Expected Improvement, but of course we can select from a number of other acquisition functions.
+
+ # initial parameters (1st point)
+default_parameters = 
+  [4, 1e-1, 'relu']
+
+# bayesian optimization
+  search_result = gp_minimize(
+  func=train,
+  dimensions=dimensions,
+  acq_func='EI', # Expctd Imprv.
+  n_calls=11,
+  x0=default_parameters
+)
+									</code></pre>
 								
 								<p>引用自：https://distill.pub/2020/bayesian-optimization/</p>
 							</section>
