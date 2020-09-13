@@ -60,6 +60,7 @@
 												4. 训练集数据有限；<br />
 												5. 如有噪声，则噪声是独立的且呈正态分布，具有共同但未知的方差。
 												</p>
+										</dd>
 										
 										<dt>构建</dt>
 										<dd>
@@ -90,44 +91,9 @@
 										
 										<dt>Thompson Sampling</dt>
 										<dd>
-											<p>该方案选取最优可能获得最大幅度提高的点作为下一个查询点，注重于提高回报。<br /><img src="../blogimages/b_o2.png" alt="" width="510" height="390"/><br />
-											同样，当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。</p>
-										</dd>
-											
-										<dt>scikit-learn使用</dt>
-										<dd>
-											<p>scikit-learn是一个实用的机器学习类库，其有KDTree的实现。如下例子为直观展示，仅构建了一个二维空间的k-d tree，
-												然后对其作k近邻搜索及指定半径的范围搜索。多维空间的检索，调用方式与此例相差无多。如下为最近邻搜索代码：</p>
-											<pre><code>import numpy as np
-from matplotlib import pyplot as plt
-from matplotlib.patches import Circle
-from sklearn.neighbors import KDTree
-np.random.seed(0)
-points = np.random.random((100, 2))
-tree = KDTree(points)
-point = points[0]
-# kNN
-dists, indices = tree.query([point], k=3)
-print(dists, indices)
-# query radius
-indices = tree.query_radius([point], r=0.2)
-print(indices)
-fig = plt.figure()
-ax = fig.add_subplot(111, aspect='equal')
-ax.add_patch(Circle(point, 0.2, color='r', fill=False))
-X, Y = [p[0] for p in points], [p[1] for p in points]
-plt.scatter(X, Y)
-plt.scatter([point[0]], [point[1]], c='r')
-plt.show()
-											</code></pre>
+											<p>该方案每一次迭代都从后验中选取一个函数，并对其进行进一步优化。该方案能够在对高不确定性区域进行探索的同时进一步研究已知最大区域。</p>
 										</dd>
 									</dl>
-
-								<!-- Preformatted Code -->
-									<h3>xx</h3>
-									<pre><code>import numpy as np
-
-									</code></pre>
 								
 								<p>引用自：https://distill.pub/2020/bayesian-optimization/</p>
 							</section>
