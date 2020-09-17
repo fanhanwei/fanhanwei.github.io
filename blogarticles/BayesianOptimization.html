@@ -95,7 +95,7 @@
 									</dl>
 									
 									<h3>在神经网络中使用Bayesian Optimization</h3>
-									<p>贝叶斯优化可以帮助我们快速的找到最优超参数，如：学习速率、batch size和激活函数等。</p>
+									<p>贝叶斯优化可以帮助我们快速的找到最优超参数，如：学习速率、batch size和激活函数等。一下程序利用scikit-optim实现bayesian optimization。</p>
 									<pre><code>log_batch_size = Integer(
   low=2,
   high=7,
@@ -118,6 +118,7 @@ dimensions = [
   dim_activation
 ]
 
+import gp-minimize from scikit-optim
  # initial parameters (1st point)
 default_parameters = 
   [4, 1e-1, 'relu']
@@ -131,6 +132,13 @@ default_parameters =
   x0=default_parameters
 )
 									</code></pre>
+									
+									<h3>GPyOpt Bayesian Optimization Tool</h3>
+									<p>GPyOpt黑盒优化器可以简化贝叶斯优化的使用，该工具将帮助我们快速寻找函数的极值。假设f是待测未知函数，我们仅了解其扰动ϵ，故有
+									<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>y</mi><mn>i</mn></msub>=f(<msub><mi>x</mi><mn>i</mn></msub>)+<msub><mi>ϵ</mi><mn>i</mn></msub>,&nbsp;with&nbsp;<msub><mi>ϵ</mi><mn>i</mn></msub>~N(0,ψ2)</math>。
+									我们需要估测一系列的x，并使得累计后悔值<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>r</mi><mn>N</mn></msub>=Nf(<msub><mi>x</mi><mn>M</mn></msub>)-<msub><mi><msup style="margin-right:-10px"><mi>∑</mi><mi>N</mi></msup></mi><mi>n=1</mi></msub>f(<msub><mi>x</mi><mi>n</mi></msub>)</math>
+									最小。所以当我们越快逼近极值时，累计后悔值就越小。
+									</p>
 								
 								<p>引用自：https://distill.pub/2020/bayesian-optimization/</p>
 							</section>
