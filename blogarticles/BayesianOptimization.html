@@ -74,8 +74,10 @@
 										<dd>
 											<p>主动学习关注全局的分布，会优先将不确定性(variance)最高的点纳入训练集。贝叶斯优化不关注全剧的分布状况，只在意极值点的位置。</p>
 										</dd>
+									</dl>
 										
-										<h3>取样函数（acquisition function）</h3>
+									<h3>取样函数（acquisition function）</h3>
+									<dl>
 										<dt>PROBABILITY OF IMPROVEMENT (PI)</dt>
 										<dd>
 											<p>该方案选择最大值最有可能提高的点作为下一个查询点，注重于减小风险。<br /><img src="../blogimages/b_o1.png" alt="" width="486" height="333"/><br />
@@ -147,38 +149,6 @@ default_parameters =
 										<dd>
 											<p>高斯常用于对未知函数建模，可通过均值μ(x)和协方差函数k(x,x′)来参数化。其中协方差函数是GP的核函数，必须是连续、对称且正定的。一种常用的核是平方指数，如下：<br />
 												<div align="center"><img src="../blogimages/b_o3.png" alt="" width="234" height="48"/></div><br />其中 σ<sup>2</sup> 和 l 为正。</p>
-										</dd>
-										
-										<dt>构建</dt>
-										<dd>
-											<p> 1. 设计代表模型，对函数建模并定义其先验概率；<br />
-												2. 获取训练集，利用贝叶斯规则计算后验概率；<br />
-												3. 利用取样函数(acquisition function) &alpha;(x)获得下一个采样点<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>argmax</mi><mn>x</mn></msub><mi>&alpha;(x)</mi></math>。其中取样函数为后验概率的函数；<br />
-												4. 新增采样点，并回到步骤二。如此迭代直至收敛或预算耗尽。
-												</p>
-										</dd>
-										
-										<dt>相比于active learning</dt>
-										<dd>
-											<p>主动学习关注全局的分布，会优先将不确定性(variance)最高的点纳入训练集。贝叶斯优化不关注全剧的分布状况，只在意极值点的位置。</p>
-										</dd>
-										
-										<h3>取样函数（acquisition function）</h3>
-										<dt>PROBABILITY OF IMPROVEMENT (PI)</dt>
-										<dd>
-											<p>该方案选择最大值最有可能提高的点作为下一个查询点，注重于减小风险。<br /><img src="../blogimages/b_o1.png" alt="" width="486" height="333"/><br />
-											当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。</p>
-										</dd>
-										
-										<dt>EXPECTED IMPROVEMENT (EI)</dt>
-										<dd>
-											<p>该方案选取最优可能获得最大幅度提高的点作为下一个查询点，注重于提高回报。<br /><img src="../blogimages/b_o2.png" alt="" width="510" height="390"/><br />
-											同样，当ϵ增大时，该算法逐渐接近Active Learning，即优先检测不确定性最高的区域。</p>
-										</dd>
-										
-										<dt>Thompson Sampling</dt>
-										<dd>
-											<p>该方案每一次迭代都从后验中选取一个函数，并对其进行进一步优化。该方案能够在对高不确定性区域进行探索的同时进一步研究已知最大区域。</p>
 										</dd>
 									</dl>
 								
