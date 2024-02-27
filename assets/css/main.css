@@ -272,7 +272,7 @@ input, select, textarea {
 
 	p {
 		text-align: justify;
-		margin: 0 0 2rem 0;
+		margin: 0 0 1rem 0;
 	}
 
 	h1, h2, h3, h4, h5, h6 {
@@ -3030,7 +3030,14 @@ input, select, textarea {
 			position: relative;
 		}
 
+		header > strong {
+			font-size: 0.9rem;
+			margin-bottom: -0rem;
+		}
+
 		header > p {
+			font-size: 0.77rem;
+			margin-bottom: -0rem;
 			font-style: italic;
 		}
 
